@@ -1,11 +1,12 @@
-(ns Automata.pimage)
-
-(ns Automata.pimage
+(ns automata.print-image
+  (:require [automata.core :as core]
+            [automata.rules :as rules])
   (:import (java.awt.image BufferedImage)
            (javax.imageio ImageIO)
            (java.io File)
            (java.awt Color))
-  (:require [Automata.cljrule30 :as core]))
+  (:require [automata.core :as core]
+            [automata.rules :as rules]))
 
 (def *black-rgb* (.getRGB Color/BLACK))
 (def *white-rgb* (.getRGB Color/WHITE)) 
@@ -35,11 +36,14 @@
         (.setRGB img x y brush)))
     img))
 
-(defn pimg-automata [steps width]
-  (let [lines (core/run-automata steps width)
+(defn pimg-automata [steps stepper the-state]
+  (let [lines (core/run-steps steps stepper the-state)
+        width (count the-state)
         img (create-image steps width lines)]
-    (ImageIO/write img "png" (File. (str steps "x" width ".png")))))
+    (ImageIO/write img "png" 
+      (File. (str steps "x" width "_" (gensym) ".png")))))
 
-;(comment
-  (pimg-automata 6000 1000)
- ; )
+(comment
+  (def initial-conditions (core/make-initial-conditions 300))
+  (pimg-automata 300 rules/rule-30-stepper initial-conditions)
+  )

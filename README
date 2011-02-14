@@ -1,17 +1,45 @@
-# Automata
+# automata
 
-FIXME: write description
+A 1 dimensional 2 state automaton, capable of rendering automatons like Wolfram's Rule 30.
 
 ## Usage
 
-FIXME: write
+I may add command line usability at some point.
+
+    (ns automata.readme
+      (:require [automata.core :as core]
+                [automata.rules :as rules]
+                [automata.pfile :as pfile]
+                [automata.pimage :as pimage]))
+
+    (def initial-conditions (core/make-initial-conditions 300))
+
+And to run normally:
+
+    (core/run-steps 10 rules/rule-30-stepper initial-conditions)
+
+Or to try with pmap (better for much larger sets):
+
+    (par/run-chunks 10 par/rule30-chunk-stepper initial-conditions 10)
+
+Or to print to file:
+
+    (pfile/pfile-automata 
+      (core/run-steps 300 rules/rule-30-stepper initial-conditions) 
+      "rule30-300x300.txt")
+
+Or to print to image:
+
+    (pimage/pimg-automata 300 rules/rule-30-stepper initial-conditions)
 
 ## Installation
 
-FIXME: write
+    git://github.com/johnmn3/Automata.git
 
 ## License
 
-Copyright (C) 2010 FIXME
+Copyright (C) 2010 John Newman
+
+pimage, pfile, and other inspiration derived from Gijs Stuurman (thegeez)
 
 Distributed under the Eclipse Public License, the same as Clojure.
